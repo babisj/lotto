@@ -8,18 +8,23 @@ __version_info__ = (1, 0, 0)
 __license__ = "GPL"
 
 ################################################################################
-import sys
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 import config
-from lotto import Lotto
 
 ################################################################################
-def sendResultViaGmail(lotto):
+def sendReminderViaGmail():
     msg = MIMEMultipart('alternative')
-    msg['Subject'] = lotto.getSubject()
-    msg.attach(MIMEText(lotto.getContent(), 'plain'))
+    msg['Subject'] = '[로또] 오늘은 로또 사는 날~'
+    msg.attach(MIMEText(
+        '아래 번호로 구매해 주세요~~\n\n'
+        + '---------------------------------------------' + '\n'
+        + '수동 : [' + config.MY_LOTTO_NUMS + ']\n'
+        + '---------------------------------------------' + '\n\n'
+        + '감사합니다.\n\n'
+        + '- 민지 아빠', 
+        'plain'))
     mailServer = smtplib.SMTP('smtp.gmail.com', 587)
     mailServer.ehlo()
     mailServer.starttls()
@@ -33,8 +38,4 @@ def sendResultViaGmail(lotto):
 
 ################################################################################
 if __name__ == '__main__':
-    lottoNums = config.MY_LOTTO_NUMS
-    if len(sys.argv) == 2:
-        lottoNums = sys.argv[1]
-    lotto = Lotto(lottoNums)
-    sendResultViaGmail(lotto)
+    sendReminderViaGmail()
