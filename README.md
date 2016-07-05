@@ -9,4 +9,3 @@
 Kaisyu님 나눔로또 API를 제공해 주셔서 고맙습니다.
 http://blog.kaisyu.com/2010/07/web-api.html
 
-- 민지아빠
