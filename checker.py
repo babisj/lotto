@@ -16,7 +16,16 @@ import config
 from lotto import Lotto
 
 ################################################################################
-def sendResultViaGmail(lotto):
+def usage():
+    print('--------------------------------------------------')
+    print('Usage:')
+    print('  %s lottoNums recipient1 ... recipientN' % sys.argv[0])
+    print('Example:')
+    print('  %s \'1, 2, 3, 4, 5, 6\' alice@gmail.com bob@gmail.com eve@gmail.com' % sys.argv[0])
+    print('--------------------------------------------------')
+ 
+################################################################################
+def sendResultViaGmail(lotto, recipients):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = lotto.getSubject()
     msg.attach(MIMEText(lotto.getContent(), 'plain'))
@@ -25,7 +34,7 @@ def sendResultViaGmail(lotto):
     mailServer.starttls()
     mailServer.ehlo()
     mailServer.login(config.MY_EMAIL_ACCOUNT, config.MY_EMAIL_PASSWORD)
-    for mailTo in config.MY_EMAIL_RECIPIENTS:
+    for mailTo in recipients:
         del msg['To']
         msg['To'] = mailTo
         mailServer.sendmail(config.MY_EMAIL_ACCOUNT, mailTo, msg.as_string())
@@ -33,8 +42,14 @@ def sendResultViaGmail(lotto):
 
 ################################################################################
 if __name__ == '__main__':
-    lottoNums = config.MY_LOTTO_NUMS
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
+        usage()
+        exit(1)
+    else:
         lottoNums = sys.argv[1]
-    lotto = Lotto(lottoNums)
-    sendResultViaGmail(lotto)
+        recipients = []
+        for recipient in sys.argv[2:]:
+            recipients.append(recipient)
+        lotto = Lotto(lottoNums)
+        sendResultViaGmail(lotto, recipients)
+        exit(0)
