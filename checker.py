@@ -47,9 +47,7 @@ if __name__ == '__main__':
         exit(1)
     else:
         lottoNums = sys.argv[1]
-        recipients = []
-        for recipient in sys.argv[2:]:
-            recipients.append(recipient)
+        recipients = sys.argv[2:]
         lotto = Lotto(lottoNums)
         sendResultViaGmail(lotto, recipients)
         exit(0)
